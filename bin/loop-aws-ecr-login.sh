@@ -30,6 +30,9 @@ fi
 while true; do
     logincmd=$(docker exec guide-aws sh -c "AWS_DEFAULT_REGION=$AWS_REGION aws ecr get-login --no-include-email")
     docker exec shell-aws sh -c "$logincmd"
+    
+    docker exec shell-aws cp /root/.docker/config.json /home/docker/.docker/
+    docker exec shell-aws chown docker:docker /home/docker/.docker/config.json
 
     services=$(docker service ls --format "{{.Name}} {{.Image}}" | grep "dkr.ecr" | awk '{print $1;}')
     for service in ${services}; do
